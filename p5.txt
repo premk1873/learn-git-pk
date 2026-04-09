@@ -16,6 +16,7 @@ STEP 4: Set Java Environment Variables
 
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
+
  Make it permanent:
 
 echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.bashrc echo
@@ -43,12 +44,10 @@ odl-dlux-all
 List installed features only:
 opendaylight-user@root> feature:list –installed
 
-logout
-
 open new terminal
 ip addr show
 
-sudo mn --topo linear,3 --mac --controller=remote,ip=192.168.56.101,port=6633 --switch ovs,protocols=OpenFlow13
+sudo mn --topo linear,3 --mac --controller=remote,ip=192.168.56.101(ipaddr),port=6633 --switch ovs,protocols=OpenFlow13
 
 pingall
 
