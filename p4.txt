@@ -1,0 +1,49 @@
+Practical No. 4
+Aim: - Perform Mininet.
+STEP 1: Install Mininet
+
+sudo apt update
+sudo apt-get install mininet
+
+STEP 2: Start Mininet
+
+sudo mn
+
+mininet> 
+pingall
+
+nano mytopology.py
+
+from mininet.topo import Topo 
+class MyTopo(Topo):
+  def build(self):
+    s1 = self.addSwitch('s1') h1 =
+    self.addHost('h1') h2 =
+    self.addHost('h2') h3 =
+    self.addHost('h3')
+    self.addLink(h1, s1)
+    self.addLink(h2, s1)
+    self.addLink(h3, s1)
+topos = {'mytopo': (lambda: MyTopo())}
+
+sudo mn --custom mytopology.py --topo mytopo --controller=remote
+pingall
+
+nano topo-2sw-2host.py
+
+from mininet.topo import Topo 
+class MyTopo(Topo):
+  def build(self):
+    leftHost = self.addHost('h1') rightHost =
+    self.addHost('h2') leftSwitch =
+    self.addSwitch('s3') rightSwitch =
+    self.addSwitch('s4')
+    self.addLink(leftHost, leftSwitch)
+    self.addLink(leftSwitch, rightSwitch)
+    self.addLink(rightSwitch, rightHost)
+topos = {'mytopo': (lambda: MyTopo())}
+
+sudo mn --custom topo-2sw-2host.py --topo mytopo --test pingall
+
+
+
