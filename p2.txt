@@ -1,0 +1,105 @@
+Practical No. 2
+Aim: - Using the AS_PATH Attribute (BGP).
+
+STEP 1: Configure Interfaces
+R1
+conf t
+interface Loopback0
+ip address 10.1.1.1 255.255.255.0
+no shutdown
+exit
+interface f0/0
+ip address 192.168.1.5 255.255.255.252
+no shutdown
+end
+
+R2
+conf t
+interface Loopback0
+ip address 10.2.2.1 255.255.255.0
+no shutdown
+interface f0/0
+ip address 192.168.1.6 255.255.255.252
+no shutdown
+exit
+interface f0/1
+ip address 172.24.1.17 255.255.255.252
+no shutdown
+end
+
+R3
+conf t
+interface Loopback0
+ip address 10.3.3.1 255.255.255.0
+no shutdown
+exit
+interface f0/1
+ip address 172.24.1.18 255.255.255.252
+no shutdown
+end
+
+STEP 2: Configure BGP
+
+R1 (AS 100)
+conf t
+router bgp 100
+neighbor 192.168.1.6 remote-as 300
+network 10.1.1.0 mask 255.255.255.0 end
+
+R2 (AS 300)
+conf t
+router bgp 300
+neighbor 192.168.1.5 remote-as 100
+neighbor 172.24.1.18 remote-as 65000
+network 10.2.2.0 mask 255.255.255.0 end
+
+R3 (AS 65000)
+conf t
+router bgp 65000
+neighbor 172.24.1.17 remote-as 300
+network 10.3.3.0 mask 255.255.255.0
+end
+
+STEP 3: Remove the Private AS
+
+Check routes on R1:
+show ip route
+show ip bgp
+You'll see AS 65000 (private AS) in the path. Now remove it:
+
+On R2:
+conf t
+router bgp 300
+neighbor 192.168.1.5 remove-private-as
+end
+clear ip bgp *
+
+Verify on R1:
+show ip route
+show ip bgp
+Now AS 65000 should be gone from the BGP path.
+STEP 4: Use AS_PATH to Filter Routes
+
+On R2:
+conf t
+ip as-path access-list 1 deny ^100$
+ip as-path access-list 1 permit .*
+router bgp 300
+neighbor 172.24.1.18 filter-list 1 out end
+clear ip bgp *
+show ip route
+
+On R3:
+show ip route
+R3 should NOT see R1's routes (10.1.1.0) anymore
+On R2:
+show ip bgp regexp ^100$
+
+STEP 5: Test Pings from R2 (ISP)
+ping 10.1.1.1
+ping 10.2.2.1
+ping 10.3.3.1
+ping 192.168.1.5
+ping 192.168.1.6
+ping 172.24.1.17
+ping 172.24.1.18
