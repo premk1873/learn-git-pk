@@ -1,0 +1,85 @@
+Practical No. 3
+Aim: - Secure Management Plane.
+
+STEP 1: Configure Interfaces
+
+R1
+conf t
+ints1/0
+ip add 10.1.1.1 255.255.255.0
+no sh
+int lo0
+ip add 192.168.1.1 255.255.255.0
+exit
+
+R2
+conf t
+ints1/0
+ip add 10.1.1.2 255.255.255.0
+no sh
+ints1/1
+ip add 10.2.2.2 255.255.255.0
+no sh
+exit
+
+R3
+conf t
+ints1/1
+ip add 10.2.2.3 255.255.255.0
+no sh
+int lo0
+ip add 192.168.3.3 255.255.255.0
+exit
+
+STEP 2: Configure Static Routing
+
+R1
+ip route 0.0.0.0 0.0.0.0 10.1.1.2
+
+R2
+ip route 192.168.1.0 255.255.255.0 10.1.1.1
+ip route 192.168.3.0 255.255.255.0 10.2.2.3
+
+R3
+ip route 0.0.0.0 0.0.0.0 10.2.2.2
+Verify:
+R1 ping 192.168.3.3
+R3 ping 192.168.1.1
+
+STEP 3: Secure Management Access
+
+On R1 & R3:
+conf t
+hostname r1
+security password min-length 10
+enable secret class12345
+line console 0
+password ciscoconpass
+exec-timeout 5 0
+login
+logging synchronous
+exit
+line vty 0 4
+password ciscovtypass
+exec-timeout 5 0
+login
+exit
+line aux 0
+no exec
+end
+conf t
+service password-encryption
+banner motd $Unauthorized access not allowed$
+exit
+
+STEP 4: Test Telnet
+From R3:
+telnet 10.1.1.1
+It will show: Unauthorized access not allowed Then enter password: ciscovtypass You'll get
+into R1 → r1>
+
+
+
+
+
+
