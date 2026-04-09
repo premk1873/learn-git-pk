@@ -1,0 +1,50 @@
+Aim: - Perform Mininet OpenDayLight.
+
+STEP 1: Update System
+
+sudo apt-get update
+
+STEP 2: Install Java 8
+
+sudo apt install openjdk-8-jdk -y
+
+STEP 3: Select Java 8 as Default
+
+sudo update-alternatives --config java
+
+STEP 4: Set Java Environment Variables
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+ Make it permanent:
+
+echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.bashrc echo
+'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+wget
+https://nexus.opendaylight.org/content/groups/public/org/opendaylight/integration/dist
+ribution-karaf/0.4.0-Beryllium/distribution-karaf-0.4.0-Beryllium.tar.gz
+
+tar -xvf distribution-karaf-0.4.0-Beryllium.tar.gz
+
+STEP 7: Navigate and Start Karaf
+
+cd distribution-karaf-0.4.0-Beryllium
+./bin/karaf
+
+STEP 8: Install OpenDaylight Features
+
+Inside the karaf shell:
+
+opendaylight-user@root> feature:install odl-restconf odl-l2switch-switch odl-mdsal- apidocs
+odl-dlux-all
+
+List installed features only:
+opendaylight-user@root> feature:list –installed
+
+logout
+ip addr show
+
+
+
