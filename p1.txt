@@ -1,0 +1,97 @@
+Practical No. 1
+Aim: - Configure IP SLA Tracking and Path Control.
+
+STEP 1: Configure interfaces
+Router R1
+conf t
+hostname R1
+interface Loopback 0
+ip address 192.168.1.1 255.255.255.0
+interface f0/0
+ip address 209.165.201.2 255.255.255.252
+no shutdown
+interface f0/1
+ip address 209.165.202.130 255.255.255.252
+no shutdown
+exit
+show interfaces description
+
+Router ISP1 (R2)
+conf t
+hostname ISP1
+interface Loopback0
+ip address 209.165.200.254 255.255.255.255
+interface Loopback1
+ip address 209.165.201.30 255.255.255.255
+interface f0/0
+ip address 209.165.201.1 255.255.255.252
+no shutdown
+interface f0/1
+ip address 209.165.200.225 255.255.255.252
+no shutdown
+exit
+show interfaces description
+
+Router ISP2 (R3)
+conf t
+hostname ISP2
+interface Loopback0
+ip address 209.165.200.254 255.255.255.255
+interface Loopback1
+ip address 209.165.202.158 255.255.255.255
+interface f0/1
+ip address 209.165.202.129 255.255.255.252
+no shutdown
+interface f0/0
+ip address 209.165.200.226 255.255.255.252
+no shutdown
+exit
+show interfaces description
+STEP 2: Configure Routing
+On R1
+conf t
+ip route 0.0.0.0 0.0.0.0 209.165.201.1
+exit
+
+On ISP1 (R2)
+conf t
+router eigrp 1
+network 209.165.200.224 0.0.0.3
+network 209.165.201.0 0.0.0.31
+no auto-summary
+exit
+ip route 192.168.1.0 255.255.255.0 209.165.201.2
+exit
+
+On ISP2 (R3)
+conf t
+router eigrp 1
+network 209.165.200.224 0.0.0.3
+network 209.165.202.128 0.0.0.31
+no auto-summary
+exit
+ip route 192.168.1.0 255.255.255.0 209.165.202.130
+exit
+
+Verify from R1:
+ping 209.165.200.254 source 192.168.1.1
+ping 209.165.201.30 source 192.168.1.1
+ping 209.165.202.158 source 192.168.1.1
+
+STEP 3: Configure IP SLA Probes on R1
+SLA Probe 11
+conf t
+ip sla monitor 11
+type echo protocol ipIcmpEcho 209.165.201.30
+frequency 10
+ip sla monitor schedule 11 start-time now life forever
+exit
+show ip sla monitor statistics details
+SLA Probe 22
+conf t
+ip sla monitor 22
+type echo protocol ipIcmpEcho 209.165.202.158
+frequency 10
+ip sla monitor schedule 22 start-time now life forever
+exit
+show ip sla monitor statistics details
