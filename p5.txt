@@ -44,7 +44,17 @@ List installed features only:
 opendaylight-user@root> feature:list –installed
 
 logout
+
+open new terminal
 ip addr show
+
+sudo mn --topo linear,3 --mac --controller=remote,ip=192.168.56.101,port=6633 --switch ovs,protocols=OpenFlow13
+
+pingall
+
+open in browser
+http://ipaddr:8181/index.html
+
 
 
 
