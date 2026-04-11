@@ -1,0 +1,23 @@
+HDFS
+
+http://192.168.3.129:4200
+raj_ops
+Q.list all files from root directory
+#hdfs dfs -ls /
+Q.create a new directory
+#hdfs dfs -mkdir /vaze
+Q.create a file 
+#cat >file1.txt
+hello world
+press ctrl+d
+
+Q.upload file in hdfs 
+#hdfs dfs -put file1.txt /vaze
+Q.list file 
+#hdfs dfs -ls /vaze
+Qlist files from ddirectory
+hdfs dfs -rm /vaze/file1.txt
+Q.delete directory
+hdfs dfs -rmdir /vaze
+Qverify
+#hdfs dfs -ls /
