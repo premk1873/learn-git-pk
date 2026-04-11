@@ -1,0 +1,44 @@
+HIVE
+
+create a file
+type 
+vi data.txt
+press i to enable insert mode
+paste / write / type data
+to save data enable command mode in vi
+press esc(escape key)
+press :wq [enter]
+
+001,Rajiv,Reddy,21,9848022337,Hyderabad
+002,siddarth,Battacharya,22,9848022338,Kolkata
+003,Rajesh,Khanna,22,9848022339,Delhi
+004,Preethi,Agarwal,21,9848022330,Pune
+005,Trupthi,Mohanthy,23,9848022336,Bhuwaneshwar
+006,Archana,Mishra,23,9848022335,Chennai
+007,Komal,Nayak,24,9848022334,trivendram
+008,Bharathi,Nambiayar,24,9848022333,Chennai
+
+#data.txt
+
+to start hive run this coomand
+hive
+ 
+create table
+
+CREATE TABLE IF NOT EXISTS employee ( eid int, fname String,
+lname String, age int, contact String, city String)
+COMMENT 'Employee details'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+
+LOAD DATA LOCAL INPATH 'data.txt' OVERWRITE INTO TABLE employee;
+
+
+SELECT * FROM employee;
+
+SELECT * FROM employee where age>=23;
+
+SELECT fname,lname from employee;
+
